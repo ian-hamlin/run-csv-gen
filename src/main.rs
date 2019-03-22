@@ -6,7 +6,7 @@ use std::{
     path::Path,
 };
 
-pub const EXPORT_FILE_NAME: &str = "racing_paces.csv";
+pub const EXPORT_FILE_NAME: &str = "running_paces.csv";
 
 fn main() {
     match create_csv() {
