@@ -36,7 +36,38 @@ fn create_csv() -> Result<(), Box<Error>> {
     // Headers.
     write_header(&mut csv_writer)?;
 
-    csv_writer.write_record(&[""])?;
+    for seconds in (120..601_u16).rev() {
+        write_record(&mut csv_writer, seconds)?;
+    }
+
+    Ok(())
+}
+
+fn write_record<W>(csv_writer: &mut Writer<W>, second: u16) -> Result<(), Box<Error>>
+where
+    W: io::Write,
+{
+    // ToDo, take the seconds and work out all the things.
+    csv_writer.write_record(&[
+        second.to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+        "".to_string(),
+    ])?;
 
     Ok(())
 }
