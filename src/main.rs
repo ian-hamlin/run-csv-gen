@@ -1,6 +1,8 @@
+use csv::Writer;
 use std::{
     error::Error,
     fs::{remove_file, OpenOptions},
+    io,
     path::Path,
 };
 
@@ -22,11 +24,47 @@ fn create_csv() -> Result<(), Box<Error>> {
     }
 
     // Open the file.
-    let _writer = OpenOptions::new()
+    let writer = OpenOptions::new()
         .write(true)
         .create(true)
         .append(false)
         .open(EXPORT_FILE_NAME)?;
+
+    // Create the CSV writer to save the output.
+    let mut csv_writer = csv::WriterBuilder::new().from_writer(writer);
+
+    // Headers.
+    write_header(&mut csv_writer)?;
+
+    csv_writer.write_record(&[""])?;
+
+    Ok(())
+}
+
+fn write_header<W>(csv_writer: &mut Writer<W>) -> Result<(), Box<Error>>
+where
+    W: io::Write,
+{
+    csv_writer.write_record(&[
+        "KM Pace",
+        "KPH",
+        "Mile Pace",
+        "MPH",
+        "5k",
+        "5m",
+        "10k",
+        "15k",
+        "10m",
+        "20k",
+        "Half",
+        "15m",
+        "25k",
+        "20m",
+        "Marathon",
+        "50k",
+        "100k",
+        "100m",
+    ])?;
 
     Ok(())
 }
