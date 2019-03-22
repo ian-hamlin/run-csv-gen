@@ -8,6 +8,23 @@ use std::{
 
 pub const EXPORT_FILE_NAME: &str = "running_paces.csv";
 
+trait FormatRecord {
+    fn km_pace(&self) -> String;
+    fn km_per_hour(&self) -> String;
+}
+
+impl FormatRecord for u16 {
+    fn km_pace(&self) -> String {
+        let second = self % 60;
+        let minute = self / 60;
+        format!("O:{:02}:{:02}", minute, second)
+    }
+
+    fn km_per_hour(&self) -> String {
+        "".to_string()
+    }
+}
+
 fn main() {
     match create_csv() {
         Ok(()) => {}
@@ -36,6 +53,7 @@ fn create_csv() -> Result<(), Box<Error>> {
     // Headers.
     write_header(&mut csv_writer)?;
 
+    // Main records
     for seconds in (120..601_u16).rev() {
         write_record(&mut csv_writer, seconds)?;
     }
@@ -49,8 +67,8 @@ where
 {
     // ToDo, take the seconds and work out all the things.
     csv_writer.write_record(&[
-        second.to_string(),
-        "".to_string(),
+        second.km_pace(),
+        second.km_per_hour(),
         "".to_string(),
         "".to_string(),
         "".to_string(),
