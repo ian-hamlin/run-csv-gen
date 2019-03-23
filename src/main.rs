@@ -21,7 +21,7 @@ impl FormatRecord for u16 {
     fn km_pace(&self) -> String {
         let second = self % 60;
         let minute = self / 60;
-        format!("{:02}:{:02}", minute, second)
+        format!("0:{:02}:{:02}", minute, second)
     }
 
     fn km_per_hour(&self) -> String {
@@ -34,7 +34,7 @@ impl FormatRecord for u16 {
         let mph = kph * CONVERSION;
         let raw: f64 = 60.0 / mph;
         let second = (raw - raw.floor()) * 60.0;
-        format!("{:02}:{:02}", raw.floor(), second.round())
+        format!("0:{:02}:{:02}", raw.floor(), second.round())
     }
 
     fn miles_per_hour(&self) -> String {
@@ -46,8 +46,15 @@ impl FormatRecord for u16 {
     fn distance_estimate(&self, km_dist: f64) -> String {
         let total_seconds = (km_dist * f64::from(*self)) / 1000.0;
         let second = total_seconds % 60.0;
-        let minute = total_seconds / 60.0;
-        format!("{:02}:{:02}", minute.floor(), second.round())
+        let minute = (total_seconds / 60.0) % 60.0;
+        let hour = (total_seconds / 60.0) / 60.0;
+
+        format!(
+            "{}:{:02}:{:02}",
+            hour.floor(),
+            minute.floor(),
+            second.round()
+        )
     }
 }
 
@@ -80,7 +87,7 @@ fn create_csv() -> Result<(), Box<Error>> {
     write_header(&mut csv_writer)?;
 
     // Main records
-    for km_pace in (120..601_u16).rev() {
+    for km_pace in (200..601_u16).rev() {
         write_record(&mut csv_writer, km_pace)?;
     }
 
@@ -98,7 +105,7 @@ where
         km_pace.mile_pace(),
         km_pace.miles_per_hour(),
         km_pace.distance_estimate(5000_f64),
-        "".to_string(),
+        km_pace.distance_estimate(8046.72),
         "".to_string(),
         "".to_string(),
         "".to_string(),
