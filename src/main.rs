@@ -54,21 +54,21 @@ fn create_csv() -> Result<(), Box<Error>> {
     write_header(&mut csv_writer)?;
 
     // Main records
-    for seconds in (120..601_u16).rev() {
-        write_record(&mut csv_writer, seconds)?;
+    for km_pace in (120..601_u16).rev() {
+        write_record(&mut csv_writer, km_pace)?;
     }
 
     Ok(())
 }
 
-fn write_record<W>(csv_writer: &mut Writer<W>, second: u16) -> Result<(), Box<Error>>
+fn write_record<W>(csv_writer: &mut Writer<W>, km_pace: u16) -> Result<(), Box<Error>>
 where
     W: io::Write,
 {
     // ToDo, take the seconds and work out all the things.
     csv_writer.write_record(&[
-        second.km_pace(),
-        second.km_per_hour(),
+        km_pace.km_pace(),
+        km_pace.km_per_hour(),
         "".to_string(),
         "".to_string(),
         "".to_string(),
