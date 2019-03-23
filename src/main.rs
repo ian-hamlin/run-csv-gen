@@ -12,6 +12,7 @@ const CONVERSION: f64 = 0.621_371;
 trait FormatRecord {
     fn km_pace(&self) -> String;
     fn km_per_hour(&self) -> String;
+    fn mile_pace(&self) -> String;
     fn miles_per_hour(&self) -> String;
 }
 
@@ -25,6 +26,14 @@ impl FormatRecord for u16 {
     fn km_per_hour(&self) -> String {
         let kph = 3600.0 / f64::from(*self);
         format!("{:.3}", kph)
+    }
+
+    fn mile_pace(&self) -> String {
+        let kph = 3600.0 / f64::from(*self);
+        let mph = kph / CONVERSION;
+        let second = 60.0 % mph;
+        let minute = 60.0 / mph;
+        format!("O:{:02}:{:02}", minute, second)
     }
 
     fn miles_per_hour(&self) -> String {
