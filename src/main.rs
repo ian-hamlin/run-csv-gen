@@ -21,7 +21,8 @@ impl FormatRecord for u16 {
     }
 
     fn km_per_hour(&self) -> String {
-        "".to_string()
+        let km = 3600.0 / f64::from(*self);
+        format!("{:.3}", km)
     }
 }
 
