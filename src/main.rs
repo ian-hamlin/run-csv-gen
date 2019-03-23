@@ -20,7 +20,7 @@ impl FormatRecord for u16 {
     fn km_pace(&self) -> String {
         let second = self % 60;
         let minute = self / 60;
-        format!("O:{:02}:{:02}", minute, second)
+        format!("{:02}:{:02}", minute, second)
     }
 
     fn km_per_hour(&self) -> String {
@@ -30,10 +30,10 @@ impl FormatRecord for u16 {
 
     fn mile_pace(&self) -> String {
         let kph = 3600.0 / f64::from(*self);
-        let mph = kph / CONVERSION;
-        let second = 60.0 % mph;
-        let minute = 60.0 / mph;
-        format!("O:{:02}:{:02}", minute, second)
+        let mph = kph * CONVERSION;
+        let raw: f64 = 60.0 / mph;
+        let second = (raw - raw.floor()) * 60.0;
+        format!("{:02}:{:02}", raw.floor(), second.round())
     }
 
     fn miles_per_hour(&self) -> String {
@@ -87,7 +87,7 @@ where
     csv_writer.write_record(&[
         km_pace.km_pace(),
         km_pace.km_per_hour(),
-        "".to_string(),
+        km_pace.mile_pace(),
         km_pace.miles_per_hour(),
         "".to_string(),
         "".to_string(),
