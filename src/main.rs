@@ -14,6 +14,7 @@ trait FormatRecord {
     fn km_per_hour(&self) -> String;
     fn mile_pace(&self) -> String;
     fn miles_per_hour(&self) -> String;
+    fn distance_estimate(&self, km_dist: f64) -> String;
 }
 
 impl FormatRecord for u16 {
@@ -40,6 +41,13 @@ impl FormatRecord for u16 {
         let kph = 3600.0 / f64::from(*self);
         let mph = kph * CONVERSION;
         format!("{:.3}", mph)
+    }
+
+    fn distance_estimate(&self, km_dist: f64) -> String {
+        let total_seconds = (km_dist * f64::from(*self)) / 1000.0;
+        let second = total_seconds % 60.0;
+        let minute = total_seconds / 60.0;
+        format!("{:02}:{:02}", minute.floor(), second.round())
     }
 }
 
@@ -89,7 +97,7 @@ where
         km_pace.km_per_hour(),
         km_pace.mile_pace(),
         km_pace.miles_per_hour(),
-        "".to_string(),
+        km_pace.distance_estimate(5000_f64),
         "".to_string(),
         "".to_string(),
         "".to_string(),
