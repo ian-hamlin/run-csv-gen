@@ -6,11 +6,13 @@ use std::{
     path::Path,
 };
 
-pub const EXPORT_FILE_NAME: &str = "running_paces.csv";
+const EXPORT_FILE_NAME: &str = "running_paces.csv";
+const CONVERSION: f64 = 0.621_371;
 
 trait FormatRecord {
     fn km_pace(&self) -> String;
     fn km_per_hour(&self) -> String;
+    fn miles_per_hour(&self) -> String;
 }
 
 impl FormatRecord for u16 {
@@ -21,8 +23,14 @@ impl FormatRecord for u16 {
     }
 
     fn km_per_hour(&self) -> String {
-        let km = 3600.0 / f64::from(*self);
-        format!("{:.3}", km)
+        let kph = 3600.0 / f64::from(*self);
+        format!("{:.3}", kph)
+    }
+
+    fn miles_per_hour(&self) -> String {
+        let kph = 3600.0 / f64::from(*self);
+        let mph = kph * CONVERSION;
+        format!("{:.3}", mph)
     }
 }
 
@@ -71,7 +79,7 @@ where
         km_pace.km_pace(),
         km_pace.km_per_hour(),
         "".to_string(),
-        "".to_string(),
+        km_pace.miles_per_hour(),
         "".to_string(),
         "".to_string(),
         "".to_string(),
