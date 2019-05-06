@@ -87,7 +87,7 @@ fn create_csv() -> Result<(), Box<Error>> {
     write_header(&mut csv_writer)?;
 
     // Main records
-    for km_pace in (200..601_u16).rev() {
+    for km_pace in (165..601_u16).rev() {
         write_record(&mut csv_writer, km_pace)?;
     }
 
